@@ -1,0 +1,17 @@
+.custom-nav-tabs .nav-link.active,
+.custom-nav-tabs .nav-link:hover {
+  background: linear-gradient(90deg, rgba(238, 200, 174, 1) 0%, rgba(221, 34, 34, 0.8379726890756303) 72%);
+  color: white;
+}
+
+.btn.form-control {
+    background: linear-gradient(90deg, rgba(238, 200, 174, 1) 0%, rgba(221, 34, 34, 0.8379726890756303) 72%);
+    color: white;
+    transition: all 0.3s ease;
+    
+  }
+
+  .btn.form-control:hover {
+    background: white;
+    color: linear-gradient(90deg, rgba(238, 200, 174, 1) 0%, rgba(221, 34, 34, 0.8379726890756303) 72%);
+  }
