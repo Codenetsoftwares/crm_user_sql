@@ -6,6 +6,7 @@ import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import moment from "moment";
 import { CSVLink } from "react-csv";
+import Pagination from "./Pagination"
 
 const Transaction = () => {
   const auth = useAuth();
@@ -16,6 +17,7 @@ const Transaction = () => {
   const [startDatevalue, SetStartDatesetValue] = useState(new Date());
   const [endDatevalue, setEndDateValue] = useState(new Date());
   const [accountData, setAccountData] = useState([]);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     AccountsService.getprofile(auth.user, id).then(
@@ -27,6 +29,11 @@ const Transaction = () => {
   }, [auth, id]);
 
   console.log(documentView);
+
+  const selectPageHandler = (selectedPage) => {
+    console.log(selectedPage);
+    setPage(selectedPage);
+  };
 
   const handelDate = () => {
     const sdate = moment(startDatevalue, "DD-MM-YYYY HH:mm").toDate();
@@ -52,10 +59,19 @@ const Transaction = () => {
     setToggle(true);
     SetStartDatesetValue("");
     setEndDateValue("");
+    SetStartDatesetValue(new Date());
+    setEndDateValue(new Date())
   };
 
+  let reminder = documentView.length % 10;
+  let lastPage = Math.ceil(documentView.length / 10);
+  let filterReminder = documentFilter.length % 10;
+  let filterLastPage = Math.ceil(documentFilter.length / 10);
+  let lastFilterPageReminder = documentView.length % 10 === !0;
+  let lastPageReminder = documentFilter.length % 10 === !0;
+
   return (
-    <div style={{ backgroundColor: "#ecfc9d" }}>
+    <div style={{ backgroundColor: "#ecfc9d", minHeight: "100vh" }}>
       <nav aria-label="breadcrumb" className="bg-light rounded-3 p-3 mb-4">
         <ul className="breadcrumb mb-0">
           <li className="breadcrumb-item">
@@ -143,11 +159,12 @@ const Transaction = () => {
           }}
         ></div>
         {toggle ? (
-          <small>
-            {/* Normal View */}
-            <table class="table table-bordered  table-sm table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl w-auto">
-              {/* This is for Deposit Card Normal View */}
-              {/* <div
+          <>
+            <small>
+              {/* Normal View */}
+              <table class="table table-bordered  table-sm table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl w-auto">
+                {/* This is for Deposit Card Normal View */}
+                {/* <div
             className="card  rounded-2 mb-2"
             style={{
               boxShadow: "26px -13px 32px -15px rgba(29,29,31,0.68)",
@@ -155,140 +172,299 @@ const Transaction = () => {
                 "linear-gradient(90deg, rgba(60,251,165,1) 0%, rgba(171,246,241,1) 50%, rgba(60,251,165,1) 100%)",
             }}
           > */}
-              <thead className="table-success">
-                <tr align="center" bgcolor="green" className="fs-6">
-                  <th scope="col fs-6" className="text-primary">
-                    Date & Time
-                  </th>
-                  <th scope="col  fs-6" className="text-primary">
-                    Amount
-                  </th>
-                  <th scope="col  fs-6" className="text-primary">
-                    Txn Id
-                  </th>
-                  <th scope="col  fs-6" className="text-primary">
-                    Txn Type
-                  </th>
-                  <th scope="col fs-6" className="text-primary">
-                    Gateway
-                  </th>
-                  <th scope="col fs-6" className="text-primary">
-                    Created By
-                  </th>
-                  {/* <th scope="col fs-6" className="text-primary">
+                <thead className="table-success">
+                  <tr align="center" bgcolor="green" className="fs-6">
+                    <th scope="col fs-6" className="text-primary">
+                      Date & Time
+                    </th>
+                    <th scope="col  fs-6" className="text-primary">
+                      Amount
+                    </th>
+                    <th scope="col  fs-6" className="text-primary">
+                      Txn Id
+                    </th>
+                    <th scope="col  fs-6" className="text-primary">
+                      Txn Type
+                    </th>
+                    <th scope="col fs-6" className="text-primary">
+                      Gateway
+                    </th>
+                    <th scope="col fs-6" className="text-primary">
+                      Created By
+                    </th>
+                    {/* <th scope="col fs-6" className="text-primary">
                     User Id
                   </th> */}
-                  <th scope="col fs-6" className="text-primary">
-                    Introducer
-                  </th>
-                  <th scope="col" className="text-primary">
-                    Bank
-                  </th>
-                  <th scope="col" className="text-primary">
-                    Website
-                  </th>
-                </tr>
-              </thead>
-              {/* </div> */}
-              <tbody>
-                {documentView.length > 0 ? (
-                  documentView.map((data, i) => {
-                    return (
-                      <tr align="center" className="fs-6">
-                        <td>
-                          {" "}
-                          {new Date(data.createdAt).toLocaleString(
-                            "default"
-                          )}{" "}
-                        </td>
-                        <td className="">
-                          {data.amount && (
-                            <p className="col fs-6">{data.amount}</p>
-                          )}
-                          {data.depositAmount && (
-                            <p className="col fs-6">{data.depositAmount}</p>
-                          )}
-                          {data.withdrawAmount && (
-                            <p className="col fs-6">{data.withdrawAmount}</p>
-                          )}
-                        </td>
-                        <td>
-                          {data.transactionID && (
-                            <p className="col fs-6 ">{data.transactionID}</p>
-                          )}
-                          {data.depositAmount && (
-                            <p className="col fs-6 ">N.A</p>
-                          )}
-                          {data.withdrawAmount && (
-                            <p className="col fs-6 ">N.A</p>
-                          )}
-                        </td>
-                        <td>
-                          {data.transactionType && (
-                            <p className="col fs-6 ">{data.transactionType}</p>
-                          )}
-                        </td>
-                        <td>
-                          {data.paymentMethod && (
-                            <p className="col fs-6">{data.paymentMethod}</p>
-                          )}
-                          {data.depositAmount && (
-                            <p className="col fs-6 ">N.A</p>
-                          )}
-                          {data.withdrawAmount && (
-                            <p className="col fs-6 ">N.A</p>
-                          )}
-                        </td>
-                        <td>{data.subAdminName}</td>
-                        {/* <td>
-                          {data.paymentMethod && (
-                            <p className="col fs-6">{data.userId}</p>
-                          )}
-                          {data.depositAmount && (
-                            <p className="col fs-6 ">N.A</p>
-                          )}
-                          {data.withdrawAmount && (
-                            <p className="col fs-6 ">N.A</p>
-                          )}
-                        </td> */}
-                        <td>
-                          {data.paymentMethod && (
-                            <p className="col fs-6">
-                              {data.introducerUserName}
-                            </p>
-                          )}
-                          {data.depositAmount && (
-                            <p className="col fs-6 ">N.A</p>
-                          )}
-                          {data.withdrawAmount && (
-                            <p className="col fs-6 ">N.A</p>
-                          )}
-                        </td>
-                        <td>
-                          <p className="col fs-6">
-                            {data.bankName ? data.bankName : "N.A"}
-                          </p>
-                        </td>
-                        <td>
-                          <p className="col fs-6">
-                            {data.websiteName ? data.websiteName : "N.A"}
-                          </p>
-                        </td>
-                      </tr>
-                    );
-                  })
-                ) : (
-                  <h1 className="text-center">No Transaction Found</h1>
-                )}
-              </tbody>
-            </table>
-          </small>
+                    <th scope="col fs-6" className="text-primary">
+                      Introducer
+                    </th>
+                    <th scope="col" className="text-primary">
+                      Bank
+                    </th>
+                    <th scope="col" className="text-primary">
+                      Website
+                    </th>
+                  </tr>
+                </thead>
+                {/* </div> */}
+                <tbody>
+                  {documentView.length > 0 ? (
+                    <>
+                      {page === lastPageReminder ? (
+                        <>
+                          {documentView
+                            .slice(page * 10 - 10, page * 10 - 10 + reminder)
+                            .map((data) => {
+                              return (
+                                <tr align="center" className="fs-6">
+                                  <td>
+                                    {" "}
+                                    {new Date(data.createdAt).toLocaleString(
+                                      "default"
+                                    )}{" "}
+                                  </td>
+                                  <td>
+                                    {data.amount && (
+                                      <p className={`col fs-6  ${data.transactionType.includes(
+                                        "Manual-Website-Withdraw"
+                                      ) ||
+                                        data.transactionType.includes("Manual-Bank-Withdraw") ||
+                                        data.transactionType === "Withdraw"
+                                        ? "text-red"
+                                        : "text-black"
+                                        }`}>{data.amount}</p>
+                                    )}
+                                    {data.depositAmount && (
+                                      <p className={`col fs-6  ${data.transactionType.includes(
+                                        "Manual-Website-Withdraw"
+                                      ) ||
+                                        data.transactionType.includes("Manual-Bank-Withdraw") ||
+                                        data.transactionType === "Withdraw"
+                                        ? "text-red"
+                                        : "text-black"
+                                        }`}>
+                                        {data.depositAmount}
+                                      </p>
+                                    )}
+                                    {data.withdrawAmount && (
+                                      <p className={`col fs-6  ${data.transactionType.includes(
+                                        "Manual-Website-Withdraw"
+                                      ) ||
+                                        data.transactionType.includes("Manual-Bank-Withdraw") ||
+                                        data.transactionType === "Withdraw"
+                                        ? "text-red"
+                                        : "text-black"
+                                        }`}>
+                                        {data.withdrawAmount}
+                                      </p>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {data.transactionID && (
+                                      <p className="col fs-6 ">
+                                        {data.transactionID}
+                                      </p>
+                                    )}
+                                    {data.depositAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                    {data.withdrawAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {data.transactionType && (
+                                      <p className={`col fs-6 text-bold  ${data.transactionType.includes(
+                                        "Manual-Website-Withdraw"
+                                      ) ||
+                                        data.transactionType.includes(
+                                          "Manual-Bank-Withdraw"
+                                        ) ||
+                                        data.transactionType === "Withdraw"
+                                        ? "text-red"
+                                        : "text-black"
+                                        }`}>
+                                        {data.transactionType}
+                                      </p>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {data.paymentMethod && (
+                                      <p className="col fs-6">
+                                        {data.paymentMethod}
+                                      </p>
+                                    )}
+                                    {data.depositAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                    {data.withdrawAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                  </td>
+                                  <td>{data.subAdminName}</td>
+                                  <td>
+                                    {data.paymentMethod && (
+                                      <p className="col fs-6">{data.userName}</p>
+                                    )}
+                                    {data.depositAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                    {data.withdrawAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                  </td>
+                                  <td>
+                                    <p className="col fs-6">
+                                      {data.bankName ? data.bankName : "N.A"}
+                                    </p>
+                                  </td>
+                                  <td>
+                                    <p className="col fs-6">
+                                      {data.websiteName ? data.websiteName : "N.A"}
+                                    </p>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                        </>
+                      ) : (
+                        <>
+                          {documentView
+                            .slice(page * 10 - 10, page * 10)
+                            .map((data) => {
+                              return (
+                                <tr align="center" className="fs-6">
+                                  <td>
+                                    {" "}
+                                    {new Date(data.createdAt).toLocaleString(
+                                      "default"
+                                    )}{" "}
+                                  </td>
+                                  <td>
+                                    {data.amount && (
+                                      <p className={`col fs-6  ${data.transactionType.includes(
+                                        "Manual-Website-Withdraw"
+                                      ) ||
+                                        data.transactionType.includes("Manual-Bank-Withdraw") ||
+                                        data.transactionType === "Withdraw"
+                                        ? "text-red"
+                                        : "text-black"
+                                        }`}>{data.amount}</p>
+                                    )}
+                                    {data.depositAmount && (
+                                      <p className={`col fs-6  ${data.transactionType.includes(
+                                        "Manual-Website-Withdraw"
+                                      ) ||
+                                        data.transactionType.includes("Manual-Bank-Withdraw") ||
+                                        data.transactionType === "Withdraw"
+                                        ? "text-red"
+                                        : "text-black"
+                                        }`}>
+                                        {data.depositAmount}
+                                      </p>
+                                    )}
+                                    {data.withdrawAmount && (
+                                      <p className={`col fs-6  ${data.transactionType.includes(
+                                        "Manual-Website-Withdraw"
+                                      ) ||
+                                        data.transactionType.includes("Manual-Bank-Withdraw") ||
+                                        data.transactionType === "Withdraw"
+                                        ? "text-red"
+                                        : "text-black"
+                                        }`}>
+                                        {data.withdrawAmount}
+                                      </p>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {data.transactionID && (
+                                      <p className="col fs-6 ">
+                                        {data.transactionID}
+                                      </p>
+                                    )}
+                                    {data.depositAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                    {data.withdrawAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {data.transactionType && (
+                                      <p className={`col fs-6  text-bold ${data.transactionType.includes(
+                                        "Manual-Website-Withdraw"
+                                      ) ||
+                                        data.transactionType.includes(
+                                          "Manual-Bank-Withdraw"
+                                        ) ||
+                                        data.transactionType === "Withdraw"
+                                        ? "text-red"
+                                        : "text-black"
+                                        }`}>
+                                        {data.transactionType}
+                                      </p>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {data.paymentMethod && (
+                                      <p className="col fs-6">
+                                        {data.paymentMethod}
+                                      </p>
+                                    )}
+                                    {data.depositAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                    {data.withdrawAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                  </td>
+                                  <td>{data.subAdminName}</td>
+                                  <td>
+                                    {data.paymentMethod && (
+                                      <p className="col fs-6">{data.userName}</p>
+                                    )}
+                                    {data.depositAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                    {data.withdrawAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                  </td>
+
+                                  <td>
+                                    <p className="col fs-6">
+                                      {data.bankName ? data.bankName : "N.A"}
+                                    </p>
+                                  </td>
+                                  <td>
+                                    <p className="col fs-6">
+                                      {data.websiteName ? data.websiteName : "N.A"}
+                                    </p>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                        </>
+                      )}
+
+                    </>
+                  ) : (
+                    <h1 className="text-center">No Transaction Found</h1>
+                  )}
+
+                </tbody>
+              </table>
+            </small>
+            {documentView.length > 0 && <div className="d-flex justify-content-center"><Pagination handlePage={selectPageHandler} page={page} totalPage={lastPage} totalData={documentView.length} perPagePagination={10} /></div>}
+
+          </>
         ) : (
-          <small>
-            {/* Normal View */}
-            <table class="table table-bordered  table-sm table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl w-auto">
-              {/* This is for Deposit Card Normal View */}
-              {/* <div
+          <>
+            <small>
+              {/* Normal View */}
+              <table class="table table-bordered  table-sm table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl w-auto">
+                {/* This is for Deposit Card Normal View */}
+                {/* <div
             className="card  rounded-2 mb-2"
             style={{
               boxShadow: "26px -13px 32px -15px rgba(29,29,31,0.68)",
@@ -296,92 +472,205 @@ const Transaction = () => {
                 "linear-gradient(90deg, rgba(60,251,165,1) 0%, rgba(171,246,241,1) 50%, rgba(60,251,165,1) 100%)",
             }}
           > */}
-              <thead className="table-success">
-                <tr align="center" bgcolor="green" className="fs-6">
-                  <th scope="col fs-6" className="text-primary">
-                    Date & Time
-                  </th>
-                  <th scope="col  fs-6" className="text-primary">
-                    Amount
-                  </th>
-                  <th scope="col  fs-6" className="text-primary">
-                    Txn Id
-                  </th>
-                  <th scope="col  fs-6" className="text-primary">
-                    Txn Type
-                  </th>
-                  <th scope="col fs-6" className="text-primary">
-                    Gateway
-                  </th>
-                  <th scope="col fs-6" className="text-primary">
-                    Created By
-                  </th>
-                  {/* <th scope="col fs-6" className="text-primary">
+                <thead className="table-success">
+                  <tr align="center" bgcolor="green" className="fs-6">
+                    <th scope="col fs-6" className="text-primary">
+                      Date & Time
+                    </th>
+                    <th scope="col  fs-6" className="text-primary">
+                      Amount
+                    </th>
+                    <th scope="col  fs-6" className="text-primary">
+                      Txn Id
+                    </th>
+                    <th scope="col  fs-6" className="text-primary">
+                      Txn Type
+                    </th>
+                    <th scope="col fs-6" className="text-primary">
+                      Gateway
+                    </th>
+                    <th scope="col fs-6" className="text-primary">
+                      Created By
+                    </th>
+                    {/* <th scope="col fs-6" className="text-primary">
                     User Id
                   </th> */}
-                  <th scope="col fs-6" className="text-primary">
-                    Introducer
-                  </th>
-                  <th scope="col" className="text-primary">
-                    Bank
-                  </th>
-                  <th scope="col" className="text-primary">
-                    Website
-                  </th>
-                </tr>
-              </thead>
-              {/* </div> */}
-              <tbody>
-                {documentFilter.length > 0 ? (
-                  documentFilter.map((data, i) => {
-                    return (
-                      <tr align="center" className="fs-6">
-                        <td>
-                          {" "}
-                          {new Date(data.createdAt).toLocaleString(
-                            "default"
-                          )}{" "}
-                        </td>
-                        <td className="">
-                          {data.amount && (
-                            <p className="col fs-6">{data.amount}</p>
-                          )}
-                          {data.depositAmount && (
-                            <p className="col fs-6">{data.depositAmount}</p>
-                          )}
-                          {data.withdrawAmount && (
-                            <p className="col fs-6">{data.withdrawAmount}</p>
-                          )}
-                        </td>
-                        <td>
-                          {data.transactionID && (
-                            <p className="col fs-6 ">{data.transactionID}</p>
-                          )}
-                          {data.depositAmount && (
-                            <p className="col fs-6 ">N.A</p>
-                          )}
-                          {data.withdrawAmount && (
-                            <p className="col fs-6 ">N.A</p>
-                          )}
-                        </td>
-                        <td>
-                          {data.transactionType && (
-                            <p className="col fs-6 ">{data.transactionType}</p>
-                          )}
-                        </td>
-                        <td>
-                          {data.paymentMethod && (
-                            <p className="col fs-6">{data.paymentMethod}</p>
-                          )}
-                          {data.depositAmount && (
-                            <p className="col fs-6 ">N.A</p>
-                          )}
-                          {data.withdrawAmount && (
-                            <p className="col fs-6 ">N.A</p>
-                          )}
-                        </td>
-                        <td>{data.subAdminName}</td>
-                        {/* <td>
+                    <th scope="col fs-6" className="text-primary">
+                      Introducer
+                    </th>
+                    <th scope="col" className="text-primary">
+                      Bank
+                    </th>
+                    <th scope="col" className="text-primary">
+                      Website
+                    </th>
+                  </tr>
+                </thead>
+                {/* </div> */}
+                <tbody>
+                  {documentFilter.length > 0 ? (
+                    <>
+                      {page === lastFilterPageReminder ? (
+                        <>
+                          {
+                            lastPage === 1 ? (<>
+                              {documentFilter
+                                .slice(page * 10 - 10, page * 10)
+                                .map((data) => {
+                                  return (
+                                    <tr align="center" className="fs-6">
+                                      <td>
+                                        {" "}
+                                        {new Date(data.createdAt).toLocaleString(
+                                          "default"
+                                        )}{" "}
+                                      </td>
+                                      <td>
+                                        {data.amount && (
+                                          <p className={`col fs-6  ${data.transactionType.includes(
+                                            "Manual-Website-Withdraw"
+                                          ) ||
+                                            data.transactionType.includes("Manual-Bank-Withdraw") ||
+                                            data.transactionType === "Withdraw"
+                                            ? "text-red"
+                                            : "text-black"
+                                            }`}>{data.amount}</p>
+                                        )}
+                                        {data.depositAmount && (
+                                          <p className="col fs-6">
+                                            {data.depositAmount}
+                                          </p>
+                                        )}
+                                        {data.withdrawAmount && (
+                                          <p className="col fs-6">
+                                            {data.withdrawAmount}
+                                          </p>
+                                        )}
+                                      </td>
+                                      <td>
+                                        {data.transactionID && (
+                                          <p className="col fs-6 ">
+                                            {data.transactionID}
+                                          </p>
+                                        )}
+                                        {data.depositAmount && (
+                                          <p className="col fs-6 ">N.A</p>
+                                        )}
+                                        {data.withdrawAmount && (
+                                          <p className="col fs-6 ">N.A</p>
+                                        )}
+                                      </td>
+                                      <td>
+                                        {data.transactionType && (
+                                          <p className={`col fs-6  text-bold ${data.transactionType.includes(
+                                            "Manual-Website-Withdraw"
+                                          ) ||
+                                            data.transactionType.includes(
+                                              "Manual-Bank-Withdraw"
+                                            ) ||
+                                            data.transactionType === "Withdraw"
+                                            ? "text-red"
+                                            : "text-black"
+                                            }`}>
+                                            {data.transactionType}
+                                          </p>
+                                        )}
+                                      </td>
+                                      <td>
+                                        {data.paymentMethod && (
+                                          <p className="col fs-6">
+                                            {data.paymentMethod}
+                                          </p>
+                                        )}
+                                        {data.depositAmount && (
+                                          <p className="col fs-6 ">N.A</p>
+                                        )}
+                                        {data.withdrawAmount && (
+                                          <p className="col fs-6 ">N.A</p>
+                                        )}
+                                      </td>
+                                      <td>{data.subAdminName}</td>
+                                      <td>
+                                        {data.paymentMethod && (
+                                          <p className="col fs-6">{data.userName}</p>
+                                        )}
+                                        {data.depositAmount && (
+                                          <p className="col fs-6 ">N.A</p>
+                                        )}
+                                        {data.withdrawAmount && (
+                                          <p className="col fs-6 ">N.A</p>
+                                        )}
+                                      </td>
+                                      <td>
+                                        <p className="col fs-6">
+                                          {data.bankName ? data.bankName : "N.A"}
+                                        </p>
+                                      </td>
+                                      <td>
+                                        <p className="col fs-6">
+                                          {data.websiteName ? data.websiteName : "N.A"}
+                                        </p>
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                            </>
+                            ) : (
+                              <>
+                                {documentFilter
+                                  .slice(
+                                    page * 10 - 10,
+                                    page * 10 - 10 + filterReminder
+                                  )
+                                  .map((data) => {
+                                    return (
+                                      <tr align="center" className="fs-6">
+                                        <td>
+                                          {" "}
+                                          {new Date(data.createdAt).toLocaleString(
+                                            "default"
+                                          )}{" "}
+                                        </td>
+                                        <td className="">
+                                          {data.amount && (
+                                            <p className="col fs-6">{data.amount}</p>
+                                          )}
+                                          {data.depositAmount && (
+                                            <p className="col fs-6">{data.depositAmount}</p>
+                                          )}
+                                          {data.withdrawAmount && (
+                                            <p className="col fs-6">{data.withdrawAmount}</p>
+                                          )}
+                                        </td>
+                                        <td>
+                                          {data.transactionID && (
+                                            <p className="col fs-6 ">{data.transactionID}</p>
+                                          )}
+                                          {data.depositAmount && (
+                                            <p className="col fs-6 ">N.A</p>
+                                          )}
+                                          {data.withdrawAmount && (
+                                            <p className="col fs-6 ">N.A</p>
+                                          )}
+                                        </td>
+                                        <td>
+                                          {data.transactionType && (
+                                            <p className="col fs-6 ">{data.transactionType}</p>
+                                          )}
+                                        </td>
+                                        <td>
+                                          {data.paymentMethod && (
+                                            <p className="col fs-6">{data.paymentMethod}</p>
+                                          )}
+                                          {data.depositAmount && (
+                                            <p className="col fs-6 ">N.A</p>
+                                          )}
+                                          {data.withdrawAmount && (
+                                            <p className="col fs-6 ">N.A</p>
+                                          )}
+                                        </td>
+                                        <td>{data.subAdminName}</td>
+                                        {/* <td>
                           {data.paymentMethod && (
                             <p className="col fs-6">{data.userId}</p>
                           )}
@@ -392,11 +681,91 @@ const Transaction = () => {
                             <p className="col fs-6 ">N.A</p>
                           )}
                         </td> */}
-                        <td>
+                                        <td>
+                                          {data.paymentMethod && (
+                                            <p className="col fs-6">
+                                              {data.introducerUserName}
+                                            </p>
+                                          )}
+                                          {data.depositAmount && (
+                                            <p className="col fs-6 ">N.A</p>
+                                          )}
+                                          {data.withdrawAmount && (
+                                            <p className="col fs-6 ">N.A</p>
+                                          )}
+                                        </td>
+                                        <td>
+                                          <p className="col fs-6">
+                                            {data.bankName ? data.bankName : "N.A"}
+                                          </p>
+                                        </td>
+                                        <td>
+                                          <p className="col fs-6">
+                                            {data.websiteName ? data.websiteName : "N.A"}
+                                          </p>
+                                        </td>
+                                      </tr>
+                                    );
+                                  })}
+                              </>
+                            )
+                          }
+                        </>
+                      ) : (
+                        <>
+                          {documentFilter
+                            .slice(page * 10 - 10, page * 10)
+                            .map((data) => {
+                              return (
+                                <tr align="center" className="fs-6">
+                                  <td>
+                                    {" "}
+                                    {new Date(data.createdAt).toLocaleString(
+                                      "default"
+                                    )}{" "}
+                                  </td>
+                                  <td className="">
+                                    {data.amount && (
+                                      <p className="col fs-6">{data.amount}</p>
+                                    )}
+                                    {data.depositAmount && (
+                                      <p className="col fs-6">{data.depositAmount}</p>
+                                    )}
+                                    {data.withdrawAmount && (
+                                      <p className="col fs-6">{data.withdrawAmount}</p>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {data.transactionID && (
+                                      <p className="col fs-6 ">{data.transactionID}</p>
+                                    )}
+                                    {data.depositAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                    {data.withdrawAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {data.transactionType && (
+                                      <p className="col fs-6 ">{data.transactionType}</p>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {data.paymentMethod && (
+                                      <p className="col fs-6">{data.paymentMethod}</p>
+                                    )}
+                                    {data.depositAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                    {data.withdrawAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                  </td>
+                                  <td>{data.subAdminName}</td>
+                                  {/* <td>
                           {data.paymentMethod && (
-                            <p className="col fs-6">
-                              {data.introducerUserName}
-                            </p>
+                            <p className="col fs-6">{data.userId}</p>
                           )}
                           {data.depositAmount && (
                             <p className="col fs-6 ">N.A</p>
@@ -404,27 +773,50 @@ const Transaction = () => {
                           {data.withdrawAmount && (
                             <p className="col fs-6 ">N.A</p>
                           )}
-                        </td>
-                        <td>
-                          <p className="col fs-6">
-                            {data.bankName ? data.bankName : "N.A"}
-                          </p>
-                        </td>
-                        <td>
-                          <p className="col fs-6">
-                            {data.websiteName ? data.websiteName : "N.A"}
-                          </p>
-                        </td>
-                      </tr>
-                    );
-                  })
-                ) : (
-                  <h1 className="text-center">No Transaction Found</h1>
-                )}
-              </tbody>
-            </table>
-          </small>
+                        </td> */}
+                                  <td>
+                                    {data.paymentMethod && (
+                                      <p className="col fs-6">
+                                        {data.introducerUserName}
+                                      </p>
+                                    )}
+                                    {data.depositAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                    {data.withdrawAmount && (
+                                      <p className="col fs-6 ">N.A</p>
+                                    )}
+                                  </td>
+                                  <td>
+                                    <p className="col fs-6">
+                                      {data.bankName ? data.bankName : "N.A"}
+                                    </p>
+                                  </td>
+                                  <td>
+                                    <p className="col fs-6">
+                                      {data.websiteName ? data.websiteName : "N.A"}
+                                    </p>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                        </>
+                      )}
+
+                    </>
+                  ) : (
+                    <h1 className="text-center">No Transaction Found</h1>
+                  )}
+
+                </tbody>
+              </table>
+            </small>
+            {documentFilter.length > 0 && <div className="d-flex justify-content-center">
+              <Pagination handlePage={selectPageHandler} page={page} totalPage={filterLastPage} totalData={documentFilter.length} perPagePagination={10} />
+            </div>}
+          </>
         )}
+
       </div>
     </div>
   );
