@@ -38,7 +38,7 @@ const handleInputChange=(data)=>{
     //   websiteName: websiteName
     // }));
   
-    AccountsService.addweb({websiteName: inputData}, auth.user)
+    AccountsService.addweb({ website_name: [inputData] }, auth.user)
       .then((response) => {
         // console.log(response.data);
         alert("Website(s) Added Successfully");
@@ -63,7 +63,7 @@ const handleInputChange=(data)=>{
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="exampleModalLabel">
-                Please Provide The Details
+                Please Provide The Details 
               </h5>
 
               <button

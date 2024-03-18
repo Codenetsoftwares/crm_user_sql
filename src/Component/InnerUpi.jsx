@@ -20,9 +20,13 @@ const InnerUpi = () => {
   };
   const handelsubmit = () => {
     const data = {
-      upiId: upiId,
-      upiNumber: upiphone,
-      upiApp: upiApp,
+      upi_details: [
+        {
+          upi_id: upiId,
+          upi_number: upiphone,
+          upi_app: upiApp,
+        }
+      ],
     };
     AccountsService.addupi(data, auth.user)
       .then((response) => {

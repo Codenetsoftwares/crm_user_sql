@@ -11,6 +11,7 @@ import Transaction from "./Component/Transaction";
 import ForPass from "./Component/ForPass";
 import { ToastContainer } from "react-toastify";
 import ResetPassWord from "./Component/ResetPassWord";
+import LoginMain from "./Component/LoginMain";
 
 function App() {
   return (
@@ -30,7 +31,7 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route index element={<Login />}></Route>
+            <Route index element={<Login/>}></Route>
             <Route path="register" element={<Register />} />
             <Route path="forpass" element={<ForPass />} />
 

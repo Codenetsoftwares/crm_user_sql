@@ -10,11 +10,11 @@ const ModalBankView = () => {
 
   useEffect(() => {
     AccountsService.getprofile(auth.user, id).then((res) =>
-      setBankdata(res.data.bankDetail)
+      setBankdata(res.data.Bank_Details)
     );
 
     AccountsService.getprofile(auth.user, id).then((res) =>
-      setUpidata(res.data.upiDetail)
+      setUpidata(res.data.Upi_Details)
     );
   }, [auth, id]);
   console.log("This is bank view=>>", bankdata);

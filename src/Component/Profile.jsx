@@ -10,14 +10,11 @@ import ModalBank from "./ModalBank";
 import AccountsService from "../Services/AccountsService";
 import ModalBankView from "./ModalBankView";
 
-
-
-
-
 const Profile = () => {
   const auth = useAuth();
+  console.log("Auth=>>>>", auth);
   const navigate = useNavigate();
-  const id = auth.user.id;
+  const id = auth.user.user_id;
   // console.log("This is Auth=>", auth);
   const [userAuth, setUserAuth] = useState([]);
   const [profiledata, setProfiledata] = useState([]);
@@ -36,7 +33,7 @@ const Profile = () => {
 
   useEffect(() => {
     AccountsService.getprofile(auth.user, id).then((res) =>
-      setProfiledata(res.data)
+      setProfiledata(res.data[0])
     );
   }, [auth, id]);
   console.log("This is Profile Data =>>>", profiledata);
@@ -58,12 +55,12 @@ const Profile = () => {
 
   // console.log("This is profile data ==>>>", profiledata);
   const handeleditprofile = () => {
-    navigate(`/editprofile/${profiledata._id}`);
+    navigate(`/editprofile/${profiledata.user_id}`);
   };
 
   const handelresetpass = () => {
     navigate("/Resetpasword");
-  }
+  };
 
   return (
     <div
@@ -104,7 +101,7 @@ const Profile = () => {
           </div>
           <div className="row">
             <div className="col-lg-4">
-              <div className="card mb-4" style={{ height: "35.5rem" }}>
+              <div className="card mb-4" style={{ height: "32.5rem" }}>
                 <div className="card-body text-center">
                   <img
                     src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
@@ -160,7 +157,7 @@ const Profile = () => {
                     <br />
                     <h6>User Name:&nbsp;{profiledata.userName}</h6>
                     <br />
-                    <div className="d-flex flex-row">
+                    {/* <div className="d-flex flex-row">
                       <h6>
                         Payment Info:&nbsp;
                         <button
@@ -175,8 +172,8 @@ const Profile = () => {
                           Click Here
                         </button>
                       </h6>
-                    </div>
-                    <br />
+                    </div> */}
+
                     {/* {profiledata.webSiteDetail &&
                       profiledata.webSiteDetail.length > 0 ? (
                       <div className="d-flex flex-row">
@@ -189,14 +186,11 @@ const Profile = () => {
 
                     <h6 className="d-flex">
                       Website Info:&nbsp;
-                      {profiledata?.webSiteDetail?.map((res) => {
-                        // console.log('str', res)
-                        return (
-                          <div className="d-flex flex-row">
-                            <h6>{res.websiteName},</h6>
-                          </div>
-                        );
-                      })}
+                      {profiledata?.Websites_Details?.map((website, index) => (
+                        <div className="d-flex flex-row" key={index}>
+                          <h6>{website}&nbsp;</h6>
+                        </div>
+                      ))}
                     </h6>
 
                     <br />
@@ -204,9 +198,9 @@ const Profile = () => {
                     <br />
                     <h6>
                       Introduced by: &nbsp;{profiledata.introducersUserName}
-                      &nbsp; 
+                      &nbsp;
                       {profiledata.introducersUserName1}
-                      &nbsp; 
+                      &nbsp;
                       {profiledata.introducersUserName2}
                     </h6>
                     <br />
