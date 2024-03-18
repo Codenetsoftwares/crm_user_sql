@@ -195,7 +195,7 @@ const Login = () => {
         }}
       >
         {/* Tab List*/}
-        <div className="nav">
+        <div className="nav" >
           <ul
             className="nav nav-pills nav-justified nav-tabs custom-nav-tabs"
             role="tablist"

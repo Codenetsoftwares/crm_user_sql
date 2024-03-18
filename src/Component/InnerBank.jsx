@@ -8,7 +8,7 @@ const InnerBank = () => {
   const [accno, setAccno] = useState("");
   const [ifsc, setIfsc] = useState("");
   const [hname, setHname] = useState("");
-  
+
   const auth = useAuth();
   // console.log("This is Auth==>>>", auth);
   const bnamechnage = (e) => {
@@ -27,14 +27,18 @@ const InnerBank = () => {
   const handelsubmit = (e) => {
     e.preventDefault();
     const data = {
-      bankName: bname,
-      accountNumber: accno,
-      ifscCode: ifsc,
-      accountHolderName: hname,
+      bank_details: [
+        {
+          bank_name: bname,
+          account_number: accno,
+          ifsc_code: ifsc,
+          account_holder_name: hname,
+        },
+      ],
     };
     AccountsService.addBank(data, auth.user)
       .then((response) => {
-        // console.log(response.data);  
+        // console.log(response.data);
         alert("Bank Added Sucessfully");
         window.location.reload();
       })
