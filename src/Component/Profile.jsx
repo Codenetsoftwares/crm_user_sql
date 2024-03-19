@@ -32,9 +32,14 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    AccountsService.getprofile(auth.user, id).then((res) =>
-      setProfiledata(res.data[0])
-    );
+    if (id) {
+      console.log("Id is not blank", id);
+      AccountsService.getprofile(auth.user, id).then((res) =>
+        setProfiledata(res.data)
+      );
+    } else {
+      console.log("Id is blank");
+    }
   }, [auth, id]);
   console.log("This is Profile Data =>>>", profiledata);
 

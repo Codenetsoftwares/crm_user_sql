@@ -6,8 +6,8 @@ import AccountsService from "../Services/AccountsService";
 import { useAuth } from "../Utils/Auth";
 
 const ResetPassWord = () => {
-    const navigate = useNavigate();
-    const auth = useAuth();
+  const navigate = useNavigate();
+  const auth = useAuth();
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -27,14 +27,14 @@ const ResetPassWord = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!oldPassword || !newPassword || !confirmNewPassword) {
+    if (!newPassword || !confirmNewPassword) {
       toast.error("Please fill in all password fields.");
       return;
     }
     if (newPassword === confirmNewPassword) {
       const data = {
         userName: auth.user.userName,
-        oldPassword: oldPassword,
+        // oldPassword: oldPassword,
         password: confirmNewPassword,
       };
       AccountsService.ResetPassword(data, auth.user)
@@ -65,7 +65,7 @@ const ResetPassWord = () => {
         style={{ width: "30rem", border: "2px solid black" }}
       >
         <div className="ml-2 mr-2">
-          <div className="form-group ">
+          {/* <div className="form-group ">
             <label htmlFor="exampleInputEmail1 ">
               {" "}
               &nbsp;&nbsp;Old Password*
@@ -80,7 +80,7 @@ const ResetPassWord = () => {
               value={oldPassword}
               onChange={handleOldPasswordChange}
             />
-          </div>
+          </div> */}
           <div className="form-group">
             <label htmlFor="exampleInputPassword1">
               &nbsp;&nbsp;New Password*
