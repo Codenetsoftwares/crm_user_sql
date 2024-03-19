@@ -34,9 +34,9 @@ const Profile = () => {
   useEffect(() => {
     if (id) {
       console.log("Id is not blank", id);
-      AccountsService.getprofile(auth.user, id).then((res) =>
-        setProfiledata(res.data)
-      );
+      AccountsService.getprofile(auth.user, id)
+        .then((res) => setProfiledata(res.data))
+        .catch((err) => console.log(err));
     } else {
       console.log("Id is blank");
     }
@@ -298,7 +298,7 @@ const Profile = () => {
           </div>
         </div>
       </section>
-      <ModalBankView />
+      {/* <ModalBankView /> */}
       <Modal />
       <ModalBank />
     </div>
