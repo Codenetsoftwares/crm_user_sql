@@ -10,7 +10,7 @@ import Pagination from "./Pagination";
 
 const Transaction = () => {
   const auth = useAuth();
-  const id = auth.user.user_id;
+  const id = auth.user.userId;
   const [toggle, setToggle] = useState(true);
   const [documentView, setDocumentView] = useState([]);
   const [documentFilter, setDocumentFilter] = useState([]);
@@ -24,8 +24,8 @@ const Transaction = () => {
       console.log("Id is not blank");
       AccountsService.getprofile(auth.user, id).then(
         (res) => (
-          setDocumentView(res.data.UserTransactionDetail),
-          setAccountData(res.data.UserTransactionDetail)
+          setDocumentView(res.data.data.UserTransactionDetail),
+          setAccountData(res.data.data.UserTransactionDetail)
         )
       );
     }

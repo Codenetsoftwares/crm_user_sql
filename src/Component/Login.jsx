@@ -42,8 +42,7 @@ const Login = () => {
       .then((res) => {
         console.log(res);
         if (res.status === 200) {
-          localStorage.setItem("user", res.data.token.accessToken);
-          console.log(auth);
+          localStorage.setItem("user", res.data.data.token);
           auth.login();
           navigate("/welcome");
           toast.success("Login Successfully");
