@@ -14,7 +14,7 @@ const Profile = () => {
   const auth = useAuth();
   console.log("Auth=>>>>", auth);
   const navigate = useNavigate();
-  const id = auth.user.userId;
+  const id = auth?.user?.userId;
   // console.log("This is Auth=>", auth);
   const [userAuth, setUserAuth] = useState([]);
   const [profiledata, setProfiledata] = useState([]);
@@ -34,8 +34,8 @@ const Profile = () => {
   useEffect(() => {
     if (id) {
       console.log("Id is not blank", id);
-      AccountsService.getprofile(auth.user, id)
-        .then((res) => setProfiledata(res.data.data))
+      AccountsService.getprofile(auth?.user, id)
+        .then((res) => setProfiledata(res?.data?.data))
         .catch((err) => console.log(err));
     } else {
       console.log("Id is blank");
@@ -60,7 +60,7 @@ const Profile = () => {
 
   // console.log("This is profile data ==>>>", profiledata);
   const handeleditprofile = () => {
-    navigate(`/editprofile/${profiledata.userId}`);
+    navigate(`/editprofile/${profiledata?.userId}`);
   };
 
   const handelresetpass = () => {
@@ -115,7 +115,7 @@ const Profile = () => {
                     style={{ width: "150px" }}
                   />
                   <h5 className="my-3 pt-3">
-                    Hi!&nbsp;{profiledata.firstName}
+                    Hi!&nbsp;{profiledata?.firstName}
                   </h5>
                   {/* <p className="text-muted mb-1 pt-3">{auth.user.userName}</p> */}
                   <p className="text-muted mb-4 ">
@@ -155,12 +155,12 @@ const Profile = () => {
                 <div className="card-body">
                   <p>
                     <h6>
-                      Name:&nbsp;{profiledata.firstName}&nbsp;
-                      {profiledata.lastName}{" "}
+                      Name:&nbsp;{profiledata?.firstName}&nbsp;
+                      {profiledata?.lastName}{" "}
                     </h6>
 
                     <br />
-                    <h6>User Name:&nbsp;{profiledata.userName}</h6>
+                    <h6>User Name:&nbsp;{profiledata?.userName}</h6>
                     <br />
                     {/* <div className="d-flex flex-row">
                       <h6>
@@ -199,14 +199,14 @@ const Profile = () => {
                     </h6>
 
                     <br />
-                    <h6>Contact Info: &nbsp;{profiledata.contactNumber}</h6>
+                    <h6>Contact Info: &nbsp;{profiledata?.contactNumber}</h6>
                     <br />
                     <h6>
-                      Introduced by: &nbsp;{profiledata.introducersUserName}
+                      Introduced by: &nbsp;{profiledata?.introducersUserName}
                       &nbsp;
-                      {profiledata.introducersUserName1}
+                      {profiledata?.introducersUserName1}
                       &nbsp;
-                      {profiledata.introducersUserName2}
+                      {profiledata?.introducersUserName2}
                     </h6>
                     <br />
                     <h6>

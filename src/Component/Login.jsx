@@ -42,7 +42,7 @@ const Login = () => {
       .then((res) => {
         console.log(res);
         if (res.status === 200) {
-          localStorage.setItem("user", res.data.data.token);
+          localStorage.setItem("user", res?.data?.data?.token);
           auth.login();
           navigate("/welcome");
           toast.success("Login Successfully");
@@ -50,8 +50,8 @@ const Login = () => {
       })
       .catch((err) => {
         console.log(err);
-        if (err.response && err.response.data) {
-          toast.error(err.response.data.message);
+        if (err?.response && err?.response.data) {
+          toast.error(err?.response?.data.message);
         } else {
           console.error("Error occurred:", err);
         }
