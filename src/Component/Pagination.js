@@ -1,240 +1,90 @@
-import React, { useEffect } from "react";
+import React from 'react'
 
-const Pagination = ({ handlePage, page, totalPage, totalData, lastPageReminder, perPagePagination }) => {
-    let startIndex = Math.min((page - 1) * perPagePagination + 1);
-    let endIndex = Math.min(page * perPagePagination, totalData);
+const Pagination = ({ currentPage, totalPages, handlePageChange, startIndex, endIndex, totalData }) => {
 
-    let arr = [];
-    const handleAdvancepage = () => {
-        let rem, pageNumber = 5;
-        for (let i = 1; i <= pageNumber; i++) {
-            arr.push(i);
-        }
-        if (totalPage % 5 === 0) {
-            pageNumber = pageNumber + 5;
-        }
-        else {
-            rem = totalPage % 5;
-            pageNumber = pageNumber + rem;
-        }
-        return arr
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+
+
+    let startPage = Math.max(currentPage - 1, 1);
+    let endPage = Math.min(currentPage + 1, totalPages);
+
+
+    if (endPage - startPage < 2) {
+      startPage = Math.max(endPage - 2, 1);
     }
 
-    // useEffect(() => { handleAdvancepage() }, [])
-    // handleAdvancepage()
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(
+        <li
+          key={i}
+          className={`page-item ${currentPage === i ? "disabled" : ""}`}
+        >
+          <button
+            className="page-link"
+            onClick={() => handlePageChange(i)}
+          >
+            {i}
+          </button>
+        </li>
+      );
+    }
 
-    console.log(arr)
-    return (
-        <div className="text-center">
-            <h4>
-                Showing {startIndex} to {endIndex} of {totalData} entries
-            </h4>
-            <div className="d-flex justify-content-center">
-                <span className={`m-1 `}>
-                    <button
-                        className={`btn btn-sm btn-primary ${page === 1 ? "disabled" : ""}`}
-                        onClick={() => {
-                            handlePage(1);
-                        }}
-                    >
-                        First
-                    </button>
-                </span>
-                <span className={`m-1 `}>
-                    <button
-                        className={`btn btn-sm btn-primary ${page === 1 ? "disabled" : ""}`}
-                        onClick={() => {
-                            page > 1 && handlePage(page - 1);
-                        }}
-                    >
-                        Previous
-                    </button>
-                </span>
+    return pageNumbers;
+  }
+  return (
+    <div className="col-lg-12">
+      <div className="white_box mb_30">
+        <nav aria-label="Page navigation example">
+          <div className='d-flex justify-content-between'>
+            <p>
+              Showing {startIndex} to {endIndex} of {totalData} entries
+            </p>
+            <ul className="pagination justify-content-end">
+              <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                <button
+                  className="page-link"
+                  onClick={() => handlePageChange(1)}
+                  disabled={currentPage === 1}
+                >
+                  First
+                </button>
+              </li>
+              <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                <button
+                  className="page-link"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+              </li>
+              {renderPageNumbers()}
+              <li className={`page-item `}>
+                <button
+                  className="page-link"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+              </li>
+              <li className={`page-item `}>
+                <button
+                  className="page-link"
+                  onClick={() => handlePageChange(totalPages)}
+                  disabled={currentPage === totalPages}
+                >
+                  Last
+                </button>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+  )
+}
 
-
-                {(page === 1 || page === totalPage) ? (
-                    <>
-                        {page === 1 ? (
-                            <>
-                                <span className={`m-1 `}>
-                                    <button
-                                        className={`btn btn-sm btn-primary `}
-                                        onClick={() => {
-                                            handlePage(page);
-                                        }}
-                                    >
-                                        {page}
-                                    </button>
-                                </span>
-                                <span className={`m-1 `}>
-                                    <button
-                                        className={`btn btn-sm btn-primary ${(page) === totalPage ? "disabled" : ""}`}
-                                        onClick={() => {
-                                            handlePage(page + 1);
-                                        }}
-                                    >
-                                        {page + 1}
-                                    </button>
-                                </span>
-                                <span >....</span>
-                            </>
-                        ) : (
-                            <>
-                                <span>....</span>
-                                <span className={`m-1 `}>
-                                    <button
-                                        className={`btn btn-sm btn-primary `}
-                                        onClick={() => {
-                                            handlePage(totalPage - 1);
-                                        }}
-                                    >
-                                        {totalPage - 1}
-                                    </button>
-                                </span>
-                                <span className={`m-1 `}>
-                                    <button
-                                        className={`btn btn-sm btn-primary`}
-                                        onClick={() => {
-                                            handlePage(totalPage);
-                                        }}
-                                    >
-                                        {totalPage}
-                                    </button>
-                                </span>
-                            </>
-                        )}
-                    </>
-                ) : (
-                    <>
-                        {(page === 2 || page === (totalPage - 1)) ? (
-                            <>
-                                {page === 2 ? (
-                                    <>
-                                        <span className={`m-1 `}>
-                                            <button
-                                                className={`btn btn-sm btn-primary`}
-                                                onClick={() => {
-                                                    handlePage(page - 1);
-                                                }}
-                                            >
-                                                {page - 1}
-                                            </button>
-                                        </span>
-                                        <span className={`m-1 `}>
-                                            <button
-                                                className={`btn btn-sm btn-primary`}
-                                                onClick={() => {
-                                                    handlePage(page);
-                                                }}
-                                            >
-                                                {page}
-                                            </button>
-                                        </span>
-                                        <span className={`m-1 `}>
-                                            <button
-                                                className={`btn btn-sm btn-primary ${(page) === totalPage ? "disabled" : ""}`}
-                                                onClick={() => {
-                                                    handlePage(page + 1);
-                                                }}
-                                            >
-                                                {page + 1}
-                                            </button>
-                                        </span>
-                                        <span className={`m-1 `}>....</span></>
-                                ) : (
-                                    <><span className={`m-1 `}>....</span>
-                                        <span className={`m-1 `}>
-                                            <button
-                                                className={`btn btn-sm btn-primary`}
-                                                onClick={() => {
-                                                    handlePage(page - 1);
-                                                }}
-                                            >
-                                                {page - 1}
-                                            </button>
-                                        </span>
-                                        <span className={`m-1 `}>
-                                            <button
-                                                className={`btn btn-sm btn-primary`}
-                                                onClick={() => {
-                                                    handlePage(page);
-                                                }}
-                                            >
-                                                {page}
-                                            </button>
-                                        </span>
-                                        <span className={`m-1 `}>
-                                            <button
-                                                className={`btn btn-sm btn-primary `}
-                                                onClick={() => {
-                                                    handlePage(page + 1);
-                                                }}
-                                            >
-                                                {page + 1}
-                                            </button>
-                                        </span></>)}
-                            </>
-                        ) : (
-                            <>
-                                <span className={`m-1 `}>....</span>
-                                <span className={`m-1 `}>
-                                    <button
-                                        className={`btn btn-sm btn-primary`}
-                                        onClick={() => {
-                                            handlePage(page - 1);
-                                        }}
-                                    >
-                                        {page - 1}
-                                    </button>
-                                </span>
-                                <span className={`m-1 `}>
-                                    <button
-                                        className={`btn btn-sm btn-primary`}
-                                        onClick={() => {
-                                            handlePage(page);
-                                        }}
-                                    >
-                                        {page}
-                                    </button>
-                                </span>
-                                <span className={`m-1 `}>
-                                    <button
-                                        className={`btn btn-sm btn-primary ${(page) === totalPage ? "disabled" : ""}`}
-                                        onClick={() => {
-                                            handlePage(page + 1);
-                                        }}
-                                    >
-                                        {page + 1}
-                                    </button>
-                                </span>
-                                <span className={`m-1 `}>....</span>
-                            </>
-                        )}
-                    </>
-                )}
-                <span className={`m-1 `}>
-                    <button
-                        className={`btn btn-sm btn-primary ${page === totalPage ? "disabled" : ""}`}
-                        onClick={() => {
-                            handlePage(page + 1);
-                        }}
-                    >
-                        Next
-                    </button>
-                </span>
-                <span className={`m-1 `}>
-                    <button
-                        className={`btn btn-sm btn-primary ${page === totalPage ? "disabled" : ""}`}
-                        onClick={() => {
-                            handlePage(totalPage);
-                        }}
-                    >
-                        Last
-                    </button>
-                </span>
-            </div>
-        </div >
-    );
-};
-
-export default Pagination;
+export default Pagination

@@ -66,6 +66,16 @@ class AccountsService {
       },
     });
   }
+  getTransaction(user, id, page, pageLimit, startDate, endDate) {
+    return axios({
+      method: "get",
+      url: `${API_HOST}/api/user-profile-data/${id}?page=${page}&pageSize=${pageLimit}&startDate=${startDate}&endDate=${endDate}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+
   editprofile(data, id, user) {
     return axios({
       method: "put",
