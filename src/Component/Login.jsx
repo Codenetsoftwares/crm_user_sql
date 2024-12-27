@@ -51,7 +51,7 @@ const Login = () => {
       .catch((err) => {
         console.log(err);
         if (err?.response && err?.response.data) {
-          toast.error(err?.response?.data.message);
+          toast.error(err?.response?.data.errMessage);
         } else {
           console.error("Error occurred:", err);
         }
