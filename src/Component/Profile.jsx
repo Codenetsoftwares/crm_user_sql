@@ -138,13 +138,13 @@ const Profile = () => {
                       Logout
                     </button>
 
-                    <button
+                    {/* <button
                       type="button"
                       className="btn btn-outline-primary ms-1"
                       onClick={handeleditprofile}
                     >
                       <small>Edit Profile</small>
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </div>
